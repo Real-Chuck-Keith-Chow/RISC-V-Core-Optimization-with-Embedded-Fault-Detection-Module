@@ -1,0 +1,122 @@
+[dumpfile] "tb_pipeline_smoke.vcd"
+[savefile] "waves.gtkw"
+[timestart] 0
+[flags] 0x0
+[pattern_trace] 1
+[treeopen] /
+[sst_expanded] 1
+[sst_vpaned_height] 250
+[signals_width] 260
+[sst_width] 260
+
+[signals]
+# ---- Clk/Reset ----
+/tb_pipeline_smoke/clk
+/tb_pipeline_smoke/rst
+
+# ---- Pipeline control (from hazard unit) ----
+/tb_pipeline_smoke/dut/stall_if
+/	tb_pipeline_smoke/dut/stall_id
+/	tb_pipeline_smoke/dut/flush_if_id
+/	tb_pipeline_smoke/dut/flush_id_ex
+
+# ---- IF stage ----
+/tb_pipeline_smoke/dut/u_pc/pc_q[31:0]
+/tb_pipeline_smoke/dut/instr_if[31:0]
+
+# IF/ID register
+/tb_pipeline_smoke/dut/u_if_id/pc_out[31:0]
+/tb_pipeline_smoke/dut/u_if_id/instr_out[31:0]
+
+# ---- ID stage ----
+/tb_pipeline_smoke/dut/pc_id[31:0]
+/tb_pipeline_smoke/dut/instr_id[31:0]
+/tb_pipeline_smoke/dut/rs1_rdata[31:0]
+/tb_pipeline_smoke/dut/rs2_rdata[31:0]
+/tb_pipeline_smoke/dut/imm_i[31:0]
+/tb_pipeline_smoke/dut/imm_s[31:0]
+/tb_pipeline_smoke/dut/imm_b[31:0]
+/tb_pipeline_smoke/dut/imm_u[31:0]
+/tb_pipeline_smoke/dut/imm_j[31:0]
+/tb_pipeline_smoke/dut/reg_write_id
+/	tb_pipeline_smoke/dut/mem_read_id
+/	tb_pipeline_smoke/dut/mem_write_id
+/	tb_pipeline_smoke/dut/mem_to_reg_id
+/	tb_pipeline_smoke/dut/alu_src_imm_id
+/	tb_pipeline_smoke/dut/branch_id
+/	tb_pipeline_smoke/dut/jal_id
+/	tb_pipeline_smoke/dut/jalr_id
+/	tb_pipeline_smoke/dut/alu_sel_id[3:0]
+
+# ID/EX register
+/tb_pipeline_smoke/dut/u_id_ex/pc_o[31:0]
+/tb_pipeline_smoke/dut/u_id_ex/rs1_o[31:0]
+/tb_pipeline_smoke/dut/u_id_ex/rs2_o[31:0]
+/tb_pipeline_smoke/dut/u_id_ex/imm_o[31:0]
+/tb_pipeline_smoke/dut/u_id_ex/rd_o[4:0]
+/tb_pipeline_smoke/dut/u_id_ex/funct3_o[2:0]
+/tb_pipeline_smoke/dut/u_id_ex/funct7_5_o
+/	tb_pipeline_smoke/dut/u_id_ex/reg_write_o
+/	tb_pipeline_smoke/dut/u_id_ex/mem_read_o
+/	tb_pipeline_smoke/dut/u_id_ex/mem_write_o
+/	tb_pipeline_smoke/dut/u_id_ex/mem_to_reg_o
+/	tb_pipeline_smoke/dut/u_id_ex/alu_src_imm_o
+/	tb_pipeline_smoke/dut/u_id_ex/branch_o
+/	tb_pipeline_smoke/dut/u_id_ex/jal_o
+/	tb_pipeline_smoke/dut/u_id_ex/jalr_o
+/	tb_pipeline_smoke/dut/u_id_ex/alu_sel_o[3:0]
+
+# ---- EX stage ----
+/tb_pipeline_smoke/dut/rs1_ex[31:0]
+/tb_pipeline_smoke/dut/rs2_ex[31:0]
+/tb_pipeline_smoke/dut/imm_ex[31:0]
+/tb_pipeline_smoke/dut/alu_sel_ex[3:0]
+/tb_pipeline_smoke/dut/fwd_a_sel[1:0]
+/tb_pipeline_smoke/dut/fwd_b_sel[1:0]
+/tb_pipeline_smoke/dut/u_alu/y[31:0]
+/tb_pipeline_smoke/dut/take_branch
+/	tb_pipeline_smoke/dut/branch_ex
+/	tb_pipeline_smoke/dut/jal_ex
+/	tb_pipeline_smoke/dut/jalr_ex
+
+# EX/MEM register
+/tb_pipeline_smoke/dut/u_ex_mem/alu_y_o[31:0]
+/tb_pipeline_smoke/dut/u_ex_mem/rs2_o[31:0]
+/tb_pipeline_smoke/dut/u_ex_mem/rd_o[4:0]
+/tb_pipeline_smoke/dut/u_ex_mem/reg_write_o
+/	tb_pipeline_smoke/dut/u_ex_mem/mem_read_o
+/	tb_pipeline_smoke/dut/u_ex_mem/mem_write_o
+/	tb_pipeline_smoke/dut/u_ex_mem/mem_to_reg_o
+
+# ---- MEM stage ----
+/tb_pipeline_smoke/dut/u_dmem/addr[31:0]
+/tb_pipeline_smoke/dut/u_dmem/wdata[31:0]
+/tb_pipeline_smoke/dut/u_dmem/rdata[31:0]
+/tb_pipeline_smoke/dut/u_dmem/we
+/	tb_pipeline_smoke/dut/u_dmem/wstrb[3:0]
+
+# MEM/WB register
+/tb_pipeline_smoke/dut/u_mem_wb/mem_rdata_o[31:0]
+/tb_pipeline_smoke/dut/u_mem_wb/alu_y_o[31:0]
+/tb_pipeline_smoke/dut/u_mem_wb/rd_o[4:0]
+/tb_pipeline_smoke/dut/u_mem_wb/reg_write_o
+/	tb_pipeline_smoke/dut/u_mem_wb/mem_to_reg_o
+
+# ---- WB stage ----
+/tb_pipeline_smoke/dut/rd_wdata[31:0]
+/tb_pipeline_smoke/dut/mem_wb_rd[4:0]
+/tb_pipeline_smoke/dut/mem_wb_reg_write
+/	tb_pipeline_smoke/dut/mem_wb_mem_to_reg
+
+# ---- Register taps (sim-only) ----
+/tb_pipeline_smoke/dut/u_rf/regs[1][31:0]
+/tb_pipeline_smoke/dut/u_rf/regs[2][31:0]
+/tb_pipeline_smoke/dut/u_rf/regs[3][31:0]
+/tb_pipeline_smoke/dut/u_rf/regs[4][31:0]
+/tb_pipeline_smoke/dut/u_rf/regs[5][31:0]
+/tb_pipeline_smoke/dut/u_rf/regs[6][31:0]
+/tb_pipeline_smoke/dut/u_rf/regs[7][31:0]
+/tb_pipeline_smoke/dut/u_rf/regs[8][31:0]
+/tb_pipeline_smoke/dut/u_rf/regs[9][31:0]
+/tb_pipeline_smoke/dut/u_rf/regs[10][31:0]
+[end]
