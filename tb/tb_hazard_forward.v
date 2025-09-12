@@ -22,19 +22,15 @@ module tb_hazard_forward;
   initial begin
     $dumpfile("tb_hazard_forward.vcd");
     $dumpvars(0, tb_hazard_forward);
-
     // Load the hazard program into the DUT's instruction memory
     // (hierarchical backdoor — no RTL change needed)
     $readmemh("tb/prog_hazard.hex", dut.u_imem.mem);
-
     // Reset a bit
     repeat (5) @(posedge clk);
     rst = 0;
-
     // Let the program flow through the 5-stage pipe
     // (there's an infinite BEQ loop at the end)
     repeat (120) @(posedge clk);
-
     // --- Checks ---
     // Program sets:
     // x1 = 5, x2 = 7,
