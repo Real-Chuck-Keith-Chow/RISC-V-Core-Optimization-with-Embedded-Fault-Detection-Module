@@ -20,16 +20,20 @@ module tb_branch;
       $display("FAIL %s: got take=%0d exp=%0d (funct3=%0d rs1=0x%08x rs2=0x%08x)",
                name, take, exp, funct3, rs1, rs2);
       $fatal(1);
+  
     end
+ 
   endtask
 
   initial begin
     $dumpfile("tb_branch.vcd"); $dumpvars(0, tb_branch);
-
+  
+    
     // --- BEQ ---
     funct3=`F3_BEQ; rs1=32'd5; rs2=32'd5;  check("BEQ equal", 1);
     rs1=32'd5; rs2=32'd6;                  check("BEQ not equal", 0);
 
+    
     // --- BNE ---
     funct3=`F3_BNE; rs1=32'd5; rs2=32'd5;  check("BNE equal", 0);
     rs1=32'd5; rs2=32'd6;                  check("BNE not equal", 1);
