@@ -1,3 +1,4 @@
+
 `timescale 1ns/1ps
 
 module tb_reg_file;
@@ -74,4 +75,13 @@ module tb_reg_file;
     write_reg(5'd4, 32'hDEAD_BEEF);
     read_expect(5'd3, 32'h1234_5678, 5'd4, 32'hDEAD_BEEF, "burst write/read");
 
-    /
+    // 5) Sweep a few registers to ensure independence
+    for (i = 5; i < 10; i = i + 1) begin
+      write_reg(i[4:0], {24'hABCD12, i[7:0]});
+      read_expect(i[4:0], {24'hABCD12, i[7:0]}, 5'd0, 32'h0, "sweep");
+    end
+
+    $display("tb_reg_file: PASS ✅");
+    $finish;
+  end
+endmodule
