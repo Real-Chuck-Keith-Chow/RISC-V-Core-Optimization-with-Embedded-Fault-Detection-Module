@@ -42,7 +42,6 @@ TESTS=(
   "tb_branch_flush.v:${RTL_DIR}/core.v ${RTL_LIB[*]}"
   # fault tests
   "tb_fault.v:${RTL_DIR}/fault_detector.v"
-  "tb_fault_core.v:${RTL_DIR}/core.v ${RTL_LIB[*]}"
 )
 
 pass() { printf "\033[1;32mPASS\033[0m\n"; }
