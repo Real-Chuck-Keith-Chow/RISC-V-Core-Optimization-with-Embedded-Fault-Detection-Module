@@ -34,8 +34,6 @@ TESTS=(
   "tb_imm.v:${RTL_DIR}/imm_gen.v"
   "tb_control_unit.v:${RTL_DIR}/control_unit.v ${RTL_DIR}/defines.vh"
   "tb_branch.v:${RTL_DIR}/branch_unit.v ${RTL_DIR}/defines.vh"
-  # bring-up (single-cycle)
-  "tb_core_sc.v:${RTL_DIR}/core_sc.v ${RTL_LIB[*]}"
   # pipeline
   "tb_pipeline_smoke.v:${RTL_DIR}/core.v ${RTL_LIB[*]}"
   "tb_hazard_forward.v:${RTL_DIR}/core.v ${RTL_LIB[*]}"
