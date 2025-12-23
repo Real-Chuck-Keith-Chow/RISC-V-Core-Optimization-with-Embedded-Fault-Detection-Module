@@ -10,9 +10,10 @@ This project implements a simplified **5-stage pipelined RISC-V RV32I processor 
 
 ✅ 5-stage pipelined RISC-V RV32I core: IF, ID, EX, MEM, WB stages  
 ✅ Basic data hazard detection with stall logic (`hazard_unit.v`)  
-✅ Ready-to-extend forwarding support (future improvement)  
+✅ Forwarding support (`forward_unit.v`)  
 ✅ Embedded fault detection module (`fault_detector.v`) for voltage anomalies  
-✅ Integrated stall and halt control on fault detection  
+✅ Integrated stall, flush, and halt control on fault detection (`core.v`)  
+✅ FPGA wrapper (`top_fpga.v`) exposing voltage monitor and halt outputs  
 ✅ Written in Verilog, synthesized with Vivado, and verified via simulation (ModelSim or Icarus Verilog)
 
 ---
@@ -21,25 +22,32 @@ This project implements a simplified **5-stage pipelined RISC-V RV32I processor 
 
 ### `core.v`
 
-- Implements a simplified RISC-V core pipeline
-- Supports hook for external `fault_detected` signal
-- Halts execution when a fault is detected
+- Implements the 5-stage pipeline
+- Ports: `clk`, `rst`, `voltage_mv[11:0]`, `fault_detected`, `core_halt`
+- Parameters: `FAULT_MIN_MV`, `FAULT_MAX_MV`, `IMEM_HEX` (instruction image)
+- Flushes/stalls on hazards and halts on detected faults
 
 ### `fault_detector.v`
 
-- Monitors simulated voltage input (`voltage_in`)
-- Asserts `fault_detected` signal when voltage goes outside safe thresholds
+- Monitors `voltage_mv` (mV)
+- Asserts `fault_detected` when outside `[MIN_MV, MAX_MV]`
 
 ### `hazard_unit.v`
 
-- Detects basic **load-use data hazards**
-- Generates stall signal to prevent incorrect data usage
+- Detects load-use hazards; issues stalls/flushes for control flow changes
 
-### `tb.v`
+### `forward_unit.v`
 
-- Testbench for full system
-- Simulates normal and faulty voltage scenarios
-- Observes pipeline behavior and halt response
+- Forwards EX/MEM or MEM/WB results to EX inputs to reduce stalls
+
+### `top_fpga.v`
+
+- FPGA wrapper that instantiates `core`, wires voltage monitor, and exposes `fault_detected`/`core_halt`
+
+### Testbenches (`tb/`)
+
+- `tb_pipeline_smoke.v`, `tb_branch_flush.v`, `tb_hazard_forward.v`, `tb_fault.v`, etc.
+- Simulate normal, hazard, branch, and fault scenarios
 
 ---
 
@@ -62,18 +70,37 @@ This project implements a simplified **5-stage pipelined RISC-V RV32I processor 
 
 ---
 
-## 📄 How to Run
+## 📄 How to Run (Icarus Verilog)
 
-1️⃣ Clone this repository  
+1️⃣ Clone  
 ```bash
-git clone https://github.com/your_username/riscv-fault-detect-core.git
-cd riscv-fault-detect-core
+git clone https://github.com/Real-Chuck-Keith-Chow/RISC-V-Core-Optimization-with-Embedded-Fault-Detection-Module.git
+cd RISC-V-Core-Optimization-with-Embedded-Fault-Detection-Module
+```
 
+2️⃣ Build + run a smoke test  
+```bash
+iverilog -g2012 -I rtl -s tb_pipeline_smoke -o build/tb_pipeline_smoke.sim rtl/*.v tb/tb_pipeline_smoke.v
+vvp build/tb_pipeline_smoke.sim
+```
 
-# Example using Icarus Verilog
-iverilog -g2012 core.v fault_detector.v hazard_unit.v tb.v -o sim
-vvp sim
+3️⃣ Other testbenches (swap top and tb file)  
+- Branch flush: `-s tb_branch_flush tb/tb_branch_flush.v`  
+- Hazard/forwarding: `-s tb_hazard_forward tb/tb_hazard_forward.v`  
+- Fault detector only: `-s tb_fault tb/tb_fault.v`
 
+4️⃣ Select program image  
+Pass a parameter override for instruction memory image:  
+```bash
+iverilog ... -P core.IMEM_HEX="tb/prog_fault.hex" ...
+```
 
-# If using GTKWave
-gtkwave dump.vcd
+5️⃣ View waveforms (optional)  
+```bash
+gtkwave tb_pipeline_smoke.vcd
+```
+
+## Notes
+- `voltage_mv` drives the fault detector inside `core`. On a detected fault, the core flushes IF/ID and ID/EX once, then stalls/halts and gates off writes.
+- `core_halt` stays high after a fault until reset. Use it to drive board LEDs or system reset logic in `top_fpga.v`.
+'@
